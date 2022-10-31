@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import random
 
 class Character():
@@ -23,8 +24,8 @@ class Character():
     def talk(self):
         # the character responds to a conversation
         if self.conversation is not None:
-            if self.conversation == dict:
-                convochoice = random.choice(list(self.conversation.values()))
+            if self.conversation == list:
+                convochoice = random.choice(self.conversation)
                 print(f"{self.name}: > {convochoice}")
             else:
                 print(f"{self.name}: > {self.conversation}")
@@ -33,13 +34,23 @@ class Character():
 
 class Friend(Character):
 
-    def __init__(self,name):
+    def __init__(self,name, option1, option2, option3, option4, option5):
         # Initilises teh friend object by calling the chracter init
         super().__init__(name)
+        self.offers = [
+            option1: None,
+            option2: None
+        ]
 
     def buy(self):
-        # the friend responds to the hug
-        pass
+        # the friend offers to sell things
+        offers = '\n'.join(f'{key}: {value}' for key, value in self.offers.items())
+        print(offers)
+        purchase = input('What do you want to buy? > ')
+        if purchase == 'quit':
+            pass
+        
+
 
 class Enemy(Character):
 

@@ -113,15 +113,17 @@ rengine_room.link_rooms(maintenance, "west")
 # Create CHaracters
 bob = Friend('Bob The Bartender')
 bob.description = 'A friendly robotic bartender that serves alchohol.'
-bob.conversation = {'''
-Would you like to buy anything?
-beer - $7
-shot - $10
-wine - $12
-Bottle of wine - $45
-Bottle of deth - $50
-''', 'What brings you onboard?', 'This ship is in critical condition please fix it!'}
+bob.conversation = ['What brings you onboard?', 'This ship is in critical condition please fix it!']
+bob.offers = {
+  "beer": 7,
+  "shot": 10,
+  "glass of wine": 12,
+  "bottle of wine": 40,
+  "mystery shot": 75
+}
 
+# Assign Characters to a room
+crew_quaters.character = bob
 
 # Init MAIN Variable
 current_room = crew_quaters
@@ -158,5 +160,16 @@ while running:
 # move
   if command in ["north","south",'east','west']:
     current_room = current_room.move(command)
+# Talk
+  elif command == "talk":
+    if current_room.character is not None:
+      current_room.character.talk()
+    else:
+      print("There is no one here!")
+
+# buy
+  elif command == "buy":
+    if current_room.character is not None:
+      current_room.character.buy()
 
   
