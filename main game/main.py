@@ -110,9 +110,14 @@ maintenance.link_rooms(lengine_room, "west")
 
 rengine_room.link_rooms(maintenance, "west")
 
-# Create CHaracters
+# Create Characters
 bob = Friend('Bob The Bartender')
-bob.description = 'A friendly robotic bartender that serves alchohol.'
+#option1 = "beer"
+#option2 = "shot"
+#option3 = "glass of wine"
+#option4 = "bottle of wine"
+#option5 = "mystery shot"
+bob.description = 'A friendly robotic bartender that sells alchohol.'
 bob.conversation = ['What brings you onboard?', 'This ship is in critical condition please fix it!']
 bob.offers = {
   "beer": 7,
@@ -129,9 +134,9 @@ crew_quaters.character = bob
 current_room = crew_quaters
 running = True
 backpack = []
-money = 100
+credits = 100
+order = True
 
-# ----- MAIN LOOP ----- #
 print("""\
  __              _ _               
 |  |   ___ ___ _| |_|___ ___       
@@ -142,17 +147,29 @@ print("""\
 time.sleep(3)
 os.system('clear')
 print("""\
-
-    ___    __                    __                     __
-   /   |  / /_  ____ _____  ____/ /___  ____  ___  ____/ /
-  / /| | / __ \/ __ `/ __ \/ __  / __ \/ __ \/ _ \/ __  / 
- / ___ |/ /_/ / /_/ / / / / /_/ / /_/ / / / /  __/ /_/ /  
-/_/  |_/_.___/\__,_/_/ /_/\__,_/\____/_/ /_/\___/\__,_/   
-                                                          
-                                                        
+   ___   __                __                 __
+  / _ | / /  ___ ____  ___/ /__  ___  ___ ___/ /
+ / __ |/ _ \/ _ `/ _ \/ _  / _ \/ _ \/ -_) _  / 
+/_/ |_/_.__/\_,_/_//_/\_,_/\___/_//_/\__/\_,_/  
+                                                
 """)
-time.sleep(1.5)
-
+time.sleep(1)
+print("""\
+   ____                      __   _    
+  / __/__  ___ ________ ___ / /  (_)__ 
+ _\ \/ _ \/ _ `/ __/ -_|_-</ _ \/ / _ \ 
+/___/ .__/\_,_/\__/\__/___/_//_/_/ .__/
+   /_/                          /_/    
+""")
+time.sleep(1)
+print("""\
+   ___     __              __              
+  / _ |___/ /  _____ ___  / /___ _________ 
+ / __ / _  / |/ / -_) _ \/ __/ // / __/ -_)
+/_/ |_\_,_/|___/\__/_//_/\__/\_,_/_/  \__/                                              
+""")
+time.sleep(2)
+# ----- MAIN LOOP ----- #
 while running:
   current_room.describe()
 
@@ -170,6 +187,13 @@ while running:
 # buy
   elif command == "buy":
     if current_room.character is not None:
-      current_room.character.buy()
+      current_room.character.buy(credits, backpack)
+
+# backpack  
+  elif command == "backpack":
+    if backpack == []:
+      print("Your backpack is empty")
+    else:
+      print(", ".join(backpack))
 
   

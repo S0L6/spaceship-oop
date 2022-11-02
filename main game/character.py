@@ -34,21 +34,35 @@ class Character():
 
 class Friend(Character):
 
-    def __init__(self,name, option1, option2, option3, option4, option5):
+    def __init__(self,name):
+        # option1, option2, option3, option4, option5
         # Initilises teh friend object by calling the chracter init
         super().__init__(name)
-        self.offers = [
-            option1: None,
-            option2: None
-        ]
+        self.offers = {
+            None: None,
+            None: None,
+            None: None,
+            None: None,
+            None: None
+        }
 
-    def buy(self):
+    def buy(self, credits, backpack):
         # the friend offers to sell things
         offers = '\n'.join(f'{key}: {value}' for key, value in self.offers.items())
         print(offers)
-        purchase = input('What do you want to buy? > ')
-        if purchase == 'quit':
-            pass
+        print(f"\nYou have " + str(credits) + " credits.")
+        purchase = input('What do you want to buy? (Type <QUIT> to exit.) > ').lower()
+        try:
+            if credits >= self.offers[purchase]:
+                credits = credits - self.offers[purchase]
+                print("You bought " + (purchase) + " and have " + str(credits) + " credits.")
+                backpack.append(str(purchase))
+                return credits
+            else:
+                print("You don't have enough credits. HINT: Look around for more.")
+        except:
+            pass       
+        
         
 
 
