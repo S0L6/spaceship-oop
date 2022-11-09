@@ -1,3 +1,5 @@
+import time
+
 class Room():
 
     def __init__(self, room_name):
@@ -7,15 +9,22 @@ class Room():
         self.linked_rooms = {}
         self.character = None
         self.item = None
+        self.object = None
         
-    def describe(self):
+    def describe(self, slowness):
         # Display a description og the room in the UI.
         print(f"\nYou are in the {self.name}.")
+        time.sleep(0.5)
         print(self.description)
+        time.sleep(0.5)
         if self.character is not None:
             self.character.describe()
+        time.sleep(0.5)
+        if self.object is not None:
+            self.object.describe()
         if self.item is not None:
             self.item.describe()
+        time.sleep(slowness)
         for direction in self.linked_rooms:
             print(f"To the {direction} is the {self.linked_rooms[direction].name}")
 

@@ -13,18 +13,10 @@ class Character():
         # sends a description of the character to the terminal
         print(f'{self.name} is here, {self.description}')
 
-    def hug(self):
-        # the character response to a hug
-        print(f"{self.name} doesnt want to hug you.")
-    
-    def fight(self):
-        # the character responds to a threat
-        print(f"{self.name} doesn't want to fight you.")
-
     def talk(self):
         # the character responds to a conversation
         if self.conversation is not None:
-            if self.conversation == list:
+            if type(self.conversation) == list:
                 convochoice = random.choice(self.conversation)
                 print(f"{self.name}: > {convochoice}")
             else:
@@ -38,18 +30,12 @@ class Friend(Character):
         # option1, option2, option3, option4, option5
         # Initilises teh friend object by calling the chracter init
         super().__init__(name)
-        self.offers = {
-            None: None,
-            None: None,
-            None: None,
-            None: None,
-            None: None
-        }
+        self.offers = {}
 
     def buy(self, credits, backpack):
         # the friend offers to sell things
-        offers = '\n'.join(f'{key}: {value}' for key, value in self.offers.items())
-        print(offers)
+        shop = '\n'.join(f'{key}: {value}' for key, value in self.offers.items())
+        print(shop)
         print(f"\nYou have " + str(credits) + " credits.")
         purchase = input('What do you want to buy? (Type <QUIT> to exit.) > ').lower()
         try:
@@ -82,7 +68,24 @@ class Enemy(Character):
             Enemy.num_of_enemy -= 1
             return True
         else:
-            print(f"{self.name} crushes you. Puny Adventurer.")
+            print(f"""{self.name} crushes you. Puny Adventurer.                     
+        GGGGGGGGGGGGG        GGGGGGGGGGGGG
+     GGG::::::::::::G     GGG::::::::::::G
+   GG:::::::::::::::G   GG:::::::::::::::G
+  G:::::GGGGGGGG::::G  G:::::GGGGGGGG::::G
+ G:::::G       GGGGGG G:::::G       GGGGGG
+G:::::G              G:::::G              
+G:::::G              G:::::G              
+G:::::G    GGGGGGGGGGG:::::G    GGGGGGGGGG
+G:::::G    G::::::::GG:::::G    G::::::::G
+G:::::G    GGGGG::::GG:::::G    GGGGG::::G
+G:::::G        G::::GG:::::G        G::::G
+ G:::::G       G::::G G:::::G       G::::G
+  G:::::GGGGGGGG::::G  G:::::GGGGGGGG::::G
+   GG:::::::::::::::G   GG:::::::::::::::G
+     GGG::::::GGG:::G     GGG::::::GGG:::G
+        GGGGGG   GGGG        GGGGGG   GGGG
+""")
             return False
     
     def get_num_of_ennemy():

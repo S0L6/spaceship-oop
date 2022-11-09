@@ -3,6 +3,8 @@
 # Modules
 from character import Character, Friend, Enemy
 from room import Room
+from item import Item
+from object import Object
 import random, time, os
 
 # Create Rooms for Spaceship
@@ -37,7 +39,24 @@ eco_cont = Room('Ecosystem Containment')
 eco_cont.description = 'Plants cover all surfaces in the open room. Overgrown vines flow through the doors to the rest of the ship.'
 
 nuclear_reactor = Room('Nuclear Reactor')
-nuclear_reactor.description = 'Green liquid seeps from the large glass silo. Defening sirens blaring warning signals due to a radioactive leak.'
+nuclear_reactor.description = '''
+                                    xxxxxxx
+                               x xxxxxxxxxxxxx x
+                            x     xxxxxxxxxxx     x
+                                   xxxxxxxxx
+                         x          xxxxxxx          x
+                                     xxxxx
+                        x             xxx             x
+                                       x
+                       xxxxxxxxxxxxxxx   xxxxxxxxxxxxxxx
+                        xxxxxxxxxxxxx     xxxxxxxxxxxxx
+                         xxxxxxxxxxx       xxxxxxxxxxx
+                          xxxxxxxxx         xxxxxxxxx
+                            xxxxxx           xxxxxx
+                              xxx             xxx
+                                  x         x
+                                       x
+Green liquid seeps from the large glass silo. Defening sirens blaring warning signals due to a radioactive leak.'''
 
 power = Room('Power')
 power.description = 'All the power runs through this room into the engines.'
@@ -110,32 +129,134 @@ maintenance.link_rooms(lengine_room, "west")
 
 rengine_room.link_rooms(maintenance, "west")
 
+air_lock.link_rooms(maintenance, "north")
+
+#create items
+lava_blade = Item('Lava Blade')
+lava_blade.description = "a blade crafted from the molten core of Planet-5479B. It is stored in a flowing lava tube."
+lava_blade.category = 'weapon'
+
+shiny_crate = Item('Shiny crate')
+shiny_crate.description = 'a crate that leaks light in the dark corner waiting to be raidied.'
+shiny_crate.category = 'credits'
+
+beer = Item('Beer')
+beer.category = 'alcohol'
+
+shot = Item('Shot')
+shot.category = 'alcohol'
+
+glassofwine = Item('Glass of Wine')
+glassofwine.category = 'alcohol'
+
+bottleofwine = Item('Bottle of Wine')
+bottleofwine.category = 'alcohol'
+
+mysteryshot = Item('Mystery Shot')
+mysteryshot.category = 'alcohol'
+
+toolbelt = Item("Tool Belt")
+toolbelt.category = 'tool'
+
+fire_extinguisher = Item('Fire Extinguisher')
+fire_extinguisher.category = 'tool'
+
+laser_cutter = Item('Laser Cutter')
+laser_cutter = 'tool'
+
+sake = Item("Sake")
+sake.category = 'alchohol'
+
+coke = Item("Coca-Cola")
+coke.category = "drink"
+
+lemonade = Item("Lemonade")
+lemonade.category = "drink"
+
+gingerbeer = Item('Ginger Beer')
+gingerbeer.category = "drink"
+
+pepsi = Item("Pepsi")
+pepsi.category = "drink"
+
+fanta = Item("Pepsi")
+fanta.category = "drink"
+
+
 # Create Characters
 bob = Friend('Bob The Bartender')
-#option1 = "beer"
-#option2 = "shot"
-#option3 = "glass of wine"
-#option4 = "bottle of wine"
-#option5 = "mystery shot"
 bob.description = 'A friendly robotic bartender that sells alchohol.'
 bob.conversation = ['What brings you onboard?', 'This ship is in critical condition please fix it!']
 bob.offers = {
-  "beer": 7,
-  "shot": 10,
-  "glass of wine": 12,
-  "bottle of wine": 40,
-  "mystery shot": 75
+  beer.name : 7,
+  shot.name : 10,
+  glassofwine.name : 12,
+  bottleofwine.name : 40,
+  mysteryshot.name : 75
+}
+
+mechanic = Friend('The Mechanic')
+mechanic.description = 'A mysterious entity willing to trade for his toolbelt.'
+mechanic.conversation = ['This can help the repairs.', 'You need this belt fo later.', "If you don't stop the radiation leak it will destroy this planet."]
+mechanic.offers = {
+toolbelt.name : 150
+}
+
+the_mech = Enemy('The Mech')
+the_mech.description = '''A huge robot mech that roams the engine room.
+ _______             _______
+|@|@|@|@|           |@|@|@|@|
+|@|@|@|@|   _____   |@|@|@|@|
+|@|@|@|@| /\_T_T_/\ |@|@|@|@|
+|@|@|@|@||/\ T T /\||@|@|@|@|
+ ~~~~/|~||~\/~T~\/~||~T~~T\~
+   /_,|_| \(-(O)-)/ |_|__|/
+  /~\      \\8_8//    |_ |_
+ (O_O)  /~~[_____]~~\   [(@)|
+       (  |       |  )    ~
+      [~` ]       [ '~]
+      |~~|         |~~|
+      |  |         |  |
+     _<\/>_       _<\/>_
+    /_====_\     /_====_\
+'''
+the_mech.conversation = ['Brrt brt brrttttt', 'shu shuuuu brrrt', '*stomp* *stomp* *stomp* brrrt']
+the_mech.weakness = 'lava blade'
+
+# create objects
+vendingmachine = Object("A Vending Machine")
+vendingmachine.description = "pick what you want and it will dispense it."
+vendingmachine.action = "buy"
+vendingmachine.dict = {
+  sake.name : 4,
+  coke.name : 3,
+  lemonade.name : 3,
+  fire_extinguisher.name : 75,
+  gingerbeer.name : 6,
+  pepsi.name : 3,
+  fanta.name : 3
 }
 
 # Assign Characters to a room
-crew_quaters.character = bob
+bar.character = bob
+rengine_room.character = the_mech
+maintenance.character = mechanic
+
+# add items to a room
+armoury.item = lava_blade
+crew_quaters.item = shiny_crate
+
+# add objects to a room
+bridge.object = vendingmachine
 
 # Init MAIN Variable
 current_room = crew_quaters
 running = True
 backpack = []
 credits = 100
-order = True
+drinkcount = 0
+slownesscounter = 0
+slowness = 0.5
 
 print("""\
  __              _ _               
@@ -171,9 +292,9 @@ print("""\
 time.sleep(2)
 # ----- MAIN LOOP ----- #
 while running:
-  current_room.describe()
+  current_room.describe(slowness)
 
-  command = input("> ").lower()
+  command = input("You > ").lower()
 # move
   if command in ["north","south",'east','west']:
     current_room = current_room.move(command)
@@ -187,13 +308,38 @@ while running:
 # buy
   elif command == "buy":
     if current_room.character is not None:
-      current_room.character.buy(credits, backpack)
+      credits = current_room.character.buy(credits, backpack)   
 
 # backpack  
   elif command == "backpack":
     if backpack == []:
-      print("Your backpack is empty")
+      print("\nYour backpack is empty")
+    else:
+      print(", ".join(backpack).capitalize())
+
+  elif command == 'take':
+    if current_room.item is not None:
+      backpack.append(current_room.item)
+      print(f"You put {current_room.item.name} into your backpack.")
+      current_room.item = None
+    else:
+      print("There is nothing to take.")
+  
+  elif command == 'use':
+    if backpack == []:
+      print("Your backpack is empty.")
     else:
       print(", ".join(backpack))
-
+      useitem = input("What item do you want to use? (Type <QUIT> to exit) > ")
+      if useitem.category == 'alcohol':
+        drinkcount = useitem.item_use()
+        print(f"You used {useitem}.")
+        if drinkcount == 5:
+          print("You have drunk to much, passed out and died. Better luck next time!")
+          running = False
+        elif useitem.category == 'credits':
+          credits = useitem.item_use()
   
+  elif command == "interact":
+    if current_room.object is not None:
+      credits = current_room.object.randomiser(credits, backpack)
