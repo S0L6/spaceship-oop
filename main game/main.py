@@ -40,22 +40,22 @@ eco_cont.description = 'Plants cover all surfaces in the open room. Overgrown vi
 
 nuclear_reactor = Room('Nuclear Reactor')
 nuclear_reactor.description = '''
-                                    xxxxxxx
-                               x xxxxxxxxxxxxx x
-                            x     xxxxxxxxxxx     x
-                                   xxxxxxxxx
-                         x          xxxxxxx          x
-                                     xxxxx
-                        x             xxx             x
-                                       x
-                       xxxxxxxxxxxxxxx   xxxxxxxxxxxxxxx
-                        xxxxxxxxxxxxx     xxxxxxxxxxxxx
-                         xxxxxxxxxxx       xxxxxxxxxxx
-                          xxxxxxxxx         xxxxxxxxx
-                            xxxxxx           xxxxxx
-                              xxx             xxx
-                                  x         x
-                                       x
+              xxxxxxx
+         x xxxxxxxxxxxxx x
+      x     xxxxxxxxxxx     x
+             xxxxxxxxx
+   x          xxxxxxx          x
+               xxxxx
+  x             xxx             x
+                 x
+ xxxxxxxxxxxxxxx   xxxxxxxxxxxxxxx
+  xxxxxxxxxxxxx     xxxxxxxxxxxxx
+   xxxxxxxxxxx       xxxxxxxxxxx
+    xxxxxxxxx         xxxxxxxxx
+      xxxxxx           xxxxxx
+        xxx             xxx
+            x         x
+                 x
 Green liquid seeps from the large glass silo. Defening sirens blaring warning signals due to a radioactive leak.'''
 
 power = Room('Power')
@@ -75,6 +75,9 @@ air_lock.description = 'An airlock for accessing the outside of the ship.'
 
 rengine_room = Room('Right Engine Room')
 rengine_room.description = 'An open room with acccess to the ion engines for repairs.'
+
+outside = Room("Outside")
+outside.description = 'Now there is an unexplored planet for you to explore good luck.'
 
 # Linking Rooms together
 bridge.link_rooms(crew_quaters, "south")
@@ -104,41 +107,52 @@ server_room.link_rooms(life_support, "west")
 server_room.link_rooms(eco_cont, "south")
 
 armoury.link_rooms(bar, "north")
-armoury.link_rooms(cargo_hold, "west")
+armoury.link_rooms(cargo_hold, "east")
 
 cargo_hold.link_rooms(life_support, "north")
-cargo_hold.link_rooms(eco_cont, "west")
+cargo_hold.link_rooms(eco_cont, "east")
 cargo_hold.link_rooms(power, "south")
-cargo_hold.link_rooms(armoury, "east")
+cargo_hold.link_rooms(armoury, "west")
+
+eco_cont.link_rooms(server_room, "north")
+eco_cont.link_rooms(cargo_hold, "west")
 
 nuclear_reactor.link_rooms(power, "west")
 
 power.link_rooms(cargo_hold, "north")
-power.link_rooms(solar_array, "west")
+power.link_rooms(solar_array, "east")
 power.link_rooms(maintenance, "south")
-power.link_rooms(nuclear_reactor, "east")
+power.link_rooms(nuclear_reactor, "west")
 
 solar_array.link_rooms(power, "east")
 
-lengine_room.link_rooms(maintenance, "east")
+lengine_room.link_rooms(maintenance, "west")
 
 maintenance.link_rooms(power, "north")
 maintenance.link_rooms(rengine_room, "east")
 maintenance.link_rooms(air_lock, "south")
 maintenance.link_rooms(lengine_room, "west")
 
-rengine_room.link_rooms(maintenance, "west")
+rengine_room.link_rooms(maintenance, "east")
 
 air_lock.link_rooms(maintenance, "north")
+air_lock.link_rooms(outside, "south")
 
 #create items
 lava_blade = Item('Lava Blade')
 lava_blade.description = "a blade crafted from the molten core of Planet-5479B. It is stored in a flowing lava tube."
 lava_blade.category = 'weapon'
 
+bugspray = Item('Bug Spray')
+bugspray.description = 'A limited edition bug spray that apparently kills anything. Certain death is guaranteed when it comes into contact with skin.'
+bugspray.category = 'weapon'
+
 shiny_crate = Item('Shiny crate')
 shiny_crate.description = 'a crate that leaks light in the dark corner waiting to be raidied.'
 shiny_crate.category = 'credits'
+
+pouch = Item("Pouch")
+pouch.category = 'credits'
 
 beer = Item('Beer')
 beer.category = 'alcohol'
@@ -162,7 +176,7 @@ fire_extinguisher = Item('Fire Extinguisher')
 fire_extinguisher.category = 'tool'
 
 laser_cutter = Item('Laser Cutter')
-laser_cutter = 'tool'
+laser_cutter.category = 'tool'
 
 sake = Item("Sake")
 sake.category = 'alchohol'
@@ -182,6 +196,9 @@ pepsi.category = "drink"
 fanta = Item("Pepsi")
 fanta.category = "drink"
 
+garden_hoe = Item("Gardening Hoe")
+garden_hoe.category = "tool"
+
 
 # Create Characters
 bob = Friend('Bob The Bartender')
@@ -199,7 +216,16 @@ mechanic = Friend('The Mechanic')
 mechanic.description = 'A mysterious entity willing to trade for his toolbelt.'
 mechanic.conversation = ['This can help the repairs.', 'You need this belt fo later.', "If you don't stop the radiation leak it will destroy this planet."]
 mechanic.offers = {
-toolbelt.name : 150
+toolbelt.name : 150,
+pouch.name : 40
+}
+
+rob = Friend("Rob the Gardener")
+rob.description = 'A robot that has lost his way. Maybe he was running from something?'
+rob.conversation = ['My laser cutter could be handy?', "Whatever you do do't go into the eco room!", "The vines have gotten out of control since the reactor went into meltdown."]
+rob.offers = {
+  laser_cutter.name : 200,
+  garden_hoe.name : 20
 }
 
 the_mech = Enemy('The Mech')
@@ -223,6 +249,10 @@ the_mech.description = '''A huge robot mech that roams the engine room.
 the_mech.conversation = ['Brrt brt brrttttt', 'shu shuuuu brrrt', '*stomp* *stomp* *stomp* brrrt']
 the_mech.weakness = 'lava blade'
 
+cockroach = Enemy('The Mutated Cockroach')
+cockroach.description = 'A giant mutated cockroach climbs the walls'
+cockroach.weakness = 'bug spray'
+
 # create objects
 vendingmachine = Object("A Vending Machine")
 vendingmachine.description = "pick what you want and it will dispense it."
@@ -237,17 +267,25 @@ vendingmachine.dict = {
   fanta.name : 3
 }
 
+creditsmultiplier = Object("A Credits Multiplier")
+creditsmultiplier.description = 'want to double, triple or even tenfold your credits?'
+creditsmultiplier.action = 'gamble'
+
 # Assign Characters to a room
 bar.character = bob
 rengine_room.character = the_mech
 maintenance.character = mechanic
+defense_room.character = rob
+eco_cont.character = cockroach
 
 # add items to a room
 armoury.item = lava_blade
 crew_quaters.item = shiny_crate
+bridge.item = bugspray
 
 # add objects to a room
 bridge.object = vendingmachine
+server_room.object = creditsmultiplier
 
 # Init MAIN Variable
 current_room = crew_quaters
@@ -257,6 +295,7 @@ credits = 100
 drinkcount = 0
 slownesscounter = 0
 slowness = 0.5
+reactorstatus = 0
 
 print("""\
  __              _ _               
@@ -289,21 +328,45 @@ print("""\
  / __ / _  / |/ / -_) _ \/ __/ // / __/ -_)
 /_/ |_\_,_/|___/\__/_//_/\__/\_,_/_/  \__/                                              
 """)
-time.sleep(2)
+time.sleep(1.5)
 # ----- MAIN LOOP ----- #
 while running:
   current_room.describe(slowness)
 
   command = input("You > ").lower()
+
 # move
   if command in ["north","south",'east','west']:
+    # Checking if reactor core has been fixed to be able to go outside
+    if current_room == maintenance:
+      if command == 'south':
+        if reactorstatus == 1:
+          if Enemy.get_num_of_ennemy() == 0:
+            os.clear()
+            print("You open the Air Lock with a hiss. A new world awaits. Good luck fellow explorer. Your journey is just beginning.")
     current_room = current_room.move(command)
+
 # Talk
   elif command == "talk":
     if current_room.character is not None:
       current_room.character.talk()
     else:
       print("There is no one here!")
+
+# Fixing the nuclear reactor
+  elif command == "fix":
+    if current_room == nuclear_reactor:
+      if "fire extinguisher" and "laser cutter" and "tool belt" in backpack:
+        print("You contained the leak and stopped the reacto from overloading now all you need is to go outside.")
+        reactorstatus = 1
+      else:
+        print("You don't have the right items. Try and find some tools.")
+        time.sleep(0.5)
+        pass
+    else:
+      print("You aren't in the right room. Try talking to some people to find out where to go.")
+      time.sleep(0.5)
+      pass
 
 # buy
   elif command == "buy":
@@ -330,16 +393,41 @@ while running:
       print("Your backpack is empty.")
     else:
       print(", ".join(backpack))
-      useitem = input("What item do you want to use? (Type <QUIT> to exit) > ")
+      useitem = input("What item do you want to use? (Type <QUIT> to exit ) > ")
       if useitem.category == 'alcohol':
-        drinkcount = useitem.item_use()
+        drinkcount = useitem.item_use(backpack, drinkcount)
         print(f"You used {useitem}.")
         if drinkcount == 5:
           print("You have drunk to much, passed out and died. Better luck next time!")
           running = False
-        elif useitem.category == 'credits':
-          credits = useitem.item_use()
+      elif useitem.categqory == 'credits':
+        credits = useitem.item_use(backpack, credits)
+        print(f"You used {useitem}.")
+      elif useitem.category == 'drink':
+        slownesscounter = useitem.item_use(backpack, slownesscounter)
+        if slownesscounter == 3:
+          slowness = 1
+          print("You feel lethargic you now move rooms slower.")
   
   elif command == "interact":
     if current_room.object is not None:
-      credits = current_room.object.randomiser(credits, backpack)
+      credits = current_room.object.objectfunction(credits, backpack)
+
+  # fight   
+  elif command == "fight":
+      if current_room.character is not None:
+          weapon = input("What will you fight with? > ").lower()
+          available_weapons = []
+          for item in backpack:
+              available_weapons.append(item.name)
+          if weapon in available_weapons:
+              if current_room.character.fight(weapon):
+                  current_room.character = None
+              else:
+                running = False
+          else:
+              print(f"You don't have {weapon}.")
+              print(f"{current_room.character.name} strikes you down. GG")
+              running = False
+      else:
+         print("There is no one to fight.")

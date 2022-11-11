@@ -68,24 +68,7 @@ class Enemy(Character):
             Enemy.num_of_enemy -= 1
             return True
         else:
-            print(f"""{self.name} crushes you. Puny Adventurer.                     
-        GGGGGGGGGGGGG        GGGGGGGGGGGGG
-     GGG::::::::::::G     GGG::::::::::::G
-   GG:::::::::::::::G   GG:::::::::::::::G
-  G:::::GGGGGGGG::::G  G:::::GGGGGGGG::::G
- G:::::G       GGGGGG G:::::G       GGGGGG
-G:::::G              G:::::G              
-G:::::G              G:::::G              
-G:::::G    GGGGGGGGGGG:::::G    GGGGGGGGGG
-G:::::G    G::::::::GG:::::G    G::::::::G
-G:::::G    GGGGG::::GG:::::G    GGGGG::::G
-G:::::G        G::::GG:::::G        G::::G
- G:::::G       G::::G G:::::G       G::::G
-  G:::::GGGGGGGG::::G  G:::::GGGGGGGG::::G
-   GG:::::::::::::::G   GG:::::::::::::::G
-     GGG::::::GGG:::G     GGG::::::GGG:::G
-        GGGGGG   GGGG        GGGGGG   GGGG
-""")
+            print(f"{self.name} crushes you. Puny Adventurer.")
             return False
     
     def get_num_of_ennemy():
