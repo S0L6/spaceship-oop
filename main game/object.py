@@ -37,15 +37,15 @@ class Object():
                     pass
                 if randomnum == 1:
                     randomnum = random.randint(1,100)
-                    if randomnum <= 50:
+                    if randomnum <= 40:
                         credits += amount*2
-                        print(f"You win! Your bet have been multiplied by 1.5. You now have {credits} credits.")
-                        return credits
-                    elif randomnum <= 75:
-                        credits += amount*3
                         print(f"You win! Your bet have been multiplied by 2. You now have {credits} credits.")
                         return credits
-                    elif randomnum <= 90:
+                    elif randomnum <= 65:
+                        credits += amount*3
+                        print(f"You win! Your bet have been multiplied by 3. You now have {credits} credits.")
+                        return credits
+                    elif randomnum <= 85:
                         credits += amount*5
                         print(f"You win! Your bet have been multiplied by 5. You now have {credits} credits.")
                         return credits

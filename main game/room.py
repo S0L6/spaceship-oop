@@ -22,6 +22,7 @@ class Room():
         time.sleep(0.5)
         if self.object is not None:
             self.object.describe()
+        time.sleep(0.5)
         if self.item is not None:
             self.item.describe()
         time.sleep(slowness)

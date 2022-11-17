@@ -5,7 +5,19 @@ from character import Character, Friend, Enemy
 from room import Room
 from item import Item
 from object import Object
-import random, time, os
+import random, time
+from os import system, name
+
+  # defineclear function
+def clear():
+ 
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+ 
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
 
 # Create Rooms for Spaceship
 bridge = Room('Bridge')
@@ -148,7 +160,7 @@ bugspray.description = 'A limited edition bug spray that apparently kills anythi
 bugspray.category = 'weapon'
 
 shiny_crate = Item('Shiny crate')
-shiny_crate.description = 'a crate that leaks light in the dark corner waiting to be raidied.'
+shiny_crate.description = 'a crate that leaks light in the dark corner waiting to be raidied'
 shiny_crate.category = 'credits'
 
 pouch = Item("Pouch")
@@ -305,7 +317,7 @@ print("""\
                         |___|      
 """)    
 time.sleep(3)
-os.system('clear')
+clear()
 print("""\
    ___   __                __                 __
   / _ | / /  ___ ____  ___/ /__  ___  ___ ___/ /
@@ -342,9 +354,13 @@ while running:
       if command == 'south':
         if reactorstatus == 1:
           if Enemy.get_num_of_ennemy() == 0:
-            os.clear()
+            clear()
             print("You open the Air Lock with a hiss. A new world awaits. Good luck fellow explorer. Your journey is just beginning.")
-    current_room = current_room.move(command)
+            running = False
+      else:
+        current_room = current_room.move(command)
+    else:
+      current_room = current_room.move(command)
 
 # Talk
   elif command == "talk":
@@ -357,7 +373,7 @@ while running:
   elif command == "fix":
     if current_room == nuclear_reactor:
       if "fire extinguisher" and "laser cutter" and "tool belt" in backpack:
-        print("You contained the leak and stopped the reacto from overloading now all you need is to go outside.")
+        print("You contained the leak and stopped the reactor from overloading now all you need is to go outside.")
         reactorstatus = 1
       else:
         print("You don't have the right items. Try and find some tools.")
@@ -387,27 +403,50 @@ while running:
       current_room.item = None
     else:
       print("There is nothing to take.")
-  
-  elif command == 'use':
-    if backpack == []:
-      print("Your backpack is empty.")
-    else:
-      print(", ".join(backpack))
-      useitem = input("What item do you want to use? (Type <QUIT> to exit ) > ")
-      if useitem.category == 'alcohol':
-        drinkcount = useitem.item_use(backpack, drinkcount)
-        print(f"You used {useitem}.")
-        if drinkcount == 5:
-          print("You have drunk to much, passed out and died. Better luck next time!")
-          running = False
-      elif useitem.categqory == 'credits':
-        credits = useitem.item_use(backpack, credits)
-        print(f"You used {useitem}.")
-      elif useitem.category == 'drink':
-        slownesscounter = useitem.item_use(backpack, slownesscounter)
-        if slownesscounter == 3:
-          slowness = 1
-          print("You feel lethargic you now move rooms slower.")
+
+#  elif command == 'use':
+#    if backpack == []:
+#      print("Your backpack is empty")
+#    else:
+#      useitem = input("What item do you want to use? (Type <QUIT> to exit ) > ").lower()
+#      itemcategory = ''
+#      available_items = []
+#      for item in backpack:
+#        available_items.append(item.name)
+#        if useitem in available_items:
+#          itemcategory = useitem.item_use(itemcategory)
+#          print("sucess")
+#        else:
+#          print("fail")
+
+
+
+        
+
+#  elif command == 'use':
+#    if backpack == []:
+#      print("Your backpack is empty.")
+#    else:
+#      print(", ".join(backpack))
+#      
+#      available_items = []
+#      for item in backpack:
+#        available_items.append(item.name)
+#      if useitem in available_items:
+#        if item.category == 'alcohol':
+#          drinkcount = useitem.item_use(backpack, drinkcount)
+#          print(f"You used {useitem}.")
+#          if drinkcount == 5:
+#            print("You have drunk to much, passed out and died. Better luck next time!")
+#            running = False
+#        elif item.category == 'credits':
+#          credits = useitem.item_use(backpack, credits)
+#          print(f"You used {useitem}.")
+#        elif item.category == 'drink':
+#          slownesscounter = useitem.item_use(backpack, slownesscounter)
+#          if slownesscounter == 3:
+#            slowness = 1
+#            print("You feel lethargic you now move rooms slower.")
   
   elif command == "interact":
     if current_room.object is not None:
@@ -431,3 +470,34 @@ while running:
               running = False
       else:
          print("There is no one to fight.")
+  
+  elif command == 'quit':
+    print('See you next time.')
+    running = False
+  
+  elif command == 'help':
+    clear()
+    print("""
+ You woke up on this mysterious space ship and need to get out. 
+ But you need to fix the reactor core before it goes critical. 
+ You can find the equipment you need on the ship in vending machines and from characters. 
+ Then you need to escape to the airlock and gain access to the outside world.
+    """)
+    time.sleep(5)
+    print("""
+    Commands:
+    - Help
+    - Quit
+    - North
+    - East
+    - South
+    - West
+    - Fix (Reactor Core)
+    - Talk
+    - Fight
+    - Buy
+    - Take (Items)
+    - Backpack
+    - Interact (Objects)
+    """)
+    time.sleep(5)

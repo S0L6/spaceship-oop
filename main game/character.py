@@ -68,7 +68,7 @@ class Enemy(Character):
             Enemy.num_of_enemy -= 1
             return True
         else:
-            print(f"{self.name} crushes you. Puny Adventurer.")
+            print(f"{self.name} defeats you. Your adventure comes to an end.")
             return False
     
     def get_num_of_ennemy():
